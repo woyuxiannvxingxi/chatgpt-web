@@ -3,6 +3,7 @@ declare namespace Chat {
 	interface Chat {
 		dateTime: string
 		text: string
+		modal?: string
 		inversion?: boolean
 		error?: boolean
 		loading?: boolean
@@ -26,6 +27,7 @@ declare namespace Chat {
 	interface ConversationRequest {
 		conversationId?: string
 		parentMessageId?: string
+		modal?: string
 	}
 
 	interface ConversationResponse {

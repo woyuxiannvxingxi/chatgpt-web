@@ -30,6 +30,7 @@ export default {
   chat: {
     newChatButton: '新建聊天',
     placeholder: '来说点什么吧...（Shift + Enter = 换行，"/" 触发提示词）',
+    modalTitle: '在聊天框输入"/"，触发提示词库',
     placeholderMobile: '来说点什么...',
     copy: '复制',
     copied: '复制成功',
@@ -74,7 +75,7 @@ export default {
     monthlyUsage: '本月使用量',
   },
   store: {
-    siderButton: '提示词商店',
+    siderButton: '提示词库',
     local: '本地',
     online: '在线',
     title: '标题',
@@ -88,7 +89,7 @@ export default {
     importError: '键值不匹配',
     importRepeatTitle: '标题重复跳过：{msg}',
     importRepeatContent: '内容重复跳过：{msg}',
-    onlineImportWarning: '注意：请检查 JSON 文件来源！',
+    onlineImportWarning: '注意：请检查 JSON 文件来源！(将列表中的链接添加到输入框中点击下载，或自行搜索导入)',
     downloadError: '请检查网络状态与 JSON 文件有效性',
   },
 }

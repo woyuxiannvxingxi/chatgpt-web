@@ -1,7 +1,7 @@
 import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
+import { chatConfig, chatReplyProcess, currentModel, getModelList } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
@@ -25,6 +25,8 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   try {
     const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
     let firstChunk = true
+    console.log('prompt', prompt)
+    console.log('options', options)
     await chatReplyProcess({
       message: prompt,
       lastContext: options,
@@ -60,6 +62,23 @@ router.post('/session', async (req, res) => {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/model-list', async (req, res) => {
+  try {
+    const modelList = process.env.MODEL_LIST ?? []
+    const modelListDisabled = process.env.MODEL_LIST_DISABLED ?? []
+    console.log('modelList', modelList, process.env.MODEL_LIST, process.env.MODEL_LIST_DISABLED)
+    const whiteLIst = getModelList(modelList, modelListDisabled)
+    res.send({
+      status: 'Success',
+      message: '',
+      data: whiteLIst,
+    })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

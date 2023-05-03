@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSelect, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -13,7 +13,7 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess, fetchModelList } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -35,7 +35,6 @@ const { uuid } = route.params as { uuid: string }
 
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
-
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
@@ -56,9 +55,35 @@ function handleSubmit() {
   onConversation()
 }
 
+const availableModels: any = ref([]) // Add this line
+let selectedModel: any = ref('') // Add this line
+
+// 从服务器获取可用模型列表
+async function fetchAvailableModels() {
+  try {
+    const response: any = await fetchModelList()
+    availableModels.value = response.data.map((model: { name: any; disabled: any }) => ({
+      label: model.name,
+      value: model.name,
+      disabled: model.disabled,
+    }))
+    const lastMessageModal = dataSources.value.at(-1)?.modal
+    selectedModel = ref(lastMessageModal || 'gpt-3.5-turbo')
+  }
+  catch (error) {
+    selectedModel = ref('gpt-3.5-turbo')
+    availableModels.value = [{
+      label: 'gpt-3.5-turbo',
+      value: 'gpt-3.5-turbo',
+      disabled: false,
+    }]
+    console.error(error)
+  }
+}
+fetchAvailableModels()
+
 async function onConversation() {
   let message = prompt.value
-
   if (loading.value)
     return
 
@@ -66,12 +91,12 @@ async function onConversation() {
     return
 
   controller = new AbortController()
-
   addChat(
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
       text: message,
+      modal: selectedModel.value,
       inversion: true,
       error: false,
       conversationOptions: null,
@@ -83,9 +108,8 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
 
-  let options: Chat.ConversationRequest = {}
+  let options: Chat.ConversationRequest = { modal: selectedModel.value }
   const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
-
   if (lastContext && usingContext.value)
     options = { ...lastContext }
 
@@ -94,6 +118,7 @@ async function onConversation() {
     {
       dateTime: new Date().toLocaleString(),
       text: '',
+      modal: selectedModel.value,
       loading: true,
       inversion: false,
       error: false,
@@ -126,10 +151,11 @@ async function onConversation() {
               {
                 dateTime: new Date().toLocaleString(),
                 text: lastText + (data.text ?? ''),
+                modal: selectedModel.value,
                 inversion: false,
                 error: false,
                 loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id, modal: selectedModel.value },
                 requestOptions: { prompt: message, options: { ...options } },
               },
             )
@@ -214,7 +240,6 @@ async function onRegenerate(index: number) {
   let message = requestOptions?.prompt ?? ''
 
   let options: Chat.ConversationRequest = {}
-
   if (requestOptions.options)
     options = { ...requestOptions.options }
 
@@ -260,7 +285,7 @@ async function onRegenerate(index: number) {
                 inversion: false,
                 error: false,
                 loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id, modal: selectedModel.value },
                 requestOptions: { prompt: message, options: { ...options } },
               },
             )
@@ -453,6 +478,7 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   scrollToBottom()
+
   if (inputRef.value && !isMobile.value)
     inputRef.value?.focus()
 })
@@ -479,9 +505,18 @@ onUnmounted(() => {
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <template v-if="!dataSources.length">
+            <div class="mt-1 text-center">
+              <div class="w-[200px] mx-auto">
+                <NSelect
+                  v-model:value="selectedModel"
+                  placeholder="Select a GPT model"
+                  :options="availableModels"
+                />
+              </div>
+            </div>
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-              <span>Aha~</span>
+              <span>嗨~你可以在这里切换模型</span>
             </div>
           </template>
           <template v-else>

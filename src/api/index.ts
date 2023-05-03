@@ -64,3 +64,10 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+// 获取可使用model列表
+export function fetchModelList<T>() {
+  return post<T>({
+    url: '/model-list',
+  })
+}

@@ -327,7 +327,7 @@ const dataSource = computed(() => {
 </script>
 
 <template>
-  <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card">
+  <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card" :title="$t('chat.modalTitle')">
     <div class="space-y-4">
       <NTabs type="segment">
         <NTabPane name="local" :tab="$t('store.local')">
@@ -445,7 +445,7 @@ const dataSource = computed(() => {
     </div>
   </NModal>
 
-  <NModal v-model:show="showModal" style="width: 90%; max-width: 600px;" preset="card">
+  <NModal v-model:show="showModal" style="width: 90%; max-width: 600px;" preset="card" title="">
     <NSpace v-if="modalMode === 'add' || modalMode === 'modify'" vertical>
       {{ t('store.title') }}
       <NInput v-model:value="tempPromptKey" />
