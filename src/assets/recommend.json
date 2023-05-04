@@ -2,7 +2,7 @@
   {
     "key": "让生产力加倍的 ChatGPT 快捷指令",
     "desc": "ChatGPT prompt(提示词)",
-    "downloadUrl": "http://chatgpt.leo-c.club:9000/gpt/prompt/GPT%20prompt.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=bonyear%2F20230502%2F%2Fs3%2Faws4_request&X-Amz-Date=20230502T112158Z&X-Amz-Expires=432000&X-Amz-SignedHeaders=host&X-Amz-Signature=058c8abccd0af9f541fbd895b6bcfe041e64f6cc766eda03d1e53d7d773da636",
+    "downloadUrl": "/src/assets/prompt/ChatGPT-Shortcut.json",
     "url": "https://github.com/rockbenben/ChatGPT-Shortcut"
   }
 ]
