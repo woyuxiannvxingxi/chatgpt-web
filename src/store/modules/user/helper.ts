@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
     userInfo: {
       avatar: 'https://img-static.mihoyo.com/avatar/avatar24.png',
       name: 'Traveler',
-      description: '善假于物也',
+      description: '爱门！',
     },
   }
 }
