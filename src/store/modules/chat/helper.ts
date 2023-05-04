@@ -20,7 +20,10 @@ export function getLocalState(): Chat.ChatState {
     item.modal = modalType
     return item
   }) || []
-  return { ...defaultState(), ...localState, history: newHistorys }
+  if (newHistorys.length === 0)
+    return { ...defaultState(), ...localState }
+  else
+    return { ...defaultState(), ...localState, history: newHistorys }
 }
 
 export function setLocalState(state: Chat.ChatState) {

@@ -60,6 +60,7 @@ export default {
     name: '名称',
     description: '描述',
     role: '角色设定',
+    role_default: 'Tech otaku save the world.',
     temperature: 'Temperature',
     top_p: 'Top_p',
     resetUserInfo: '重置用户信息',
