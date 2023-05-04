@@ -1,6 +1,7 @@
 declare namespace Chat {
 
 	interface Chat {
+		uuid: number
 		dateTime: string
 		text: string
 		modal?: string
@@ -12,6 +13,7 @@ declare namespace Chat {
 	}
 
 	interface History {
+		modal: any
 		title: string
 		isEdit: boolean
 		uuid: number

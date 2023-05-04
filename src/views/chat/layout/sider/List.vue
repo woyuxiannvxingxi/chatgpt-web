@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import '@/assets/font/font.css'
 import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
@@ -12,7 +13,6 @@ const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const dataSources = computed(() => chatStore.history)
-
 async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))
     return
@@ -72,11 +72,13 @@ function isActive(uuid: number) {
             <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
               <NInput
                 v-if="item.isEdit"
-                v-model:value="item.title" size="tiny"
+                v-model:value="item.title"
+                class="w-[100px]" size="tiny"
                 @keypress="handleEnter(item, false, $event)"
               />
               <span v-else>{{ item.title }}</span>
             </div>
+            <span v-if="item.modal?.indexOf('gpt-4') > -1" class="gpt-flag">{{ item.modal }}</span>
             <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
               <template v-if="item.isEdit">
                 <button class="p-1" @click="handleEdit(item, false, $event)">
@@ -103,3 +105,15 @@ function isActive(uuid: number) {
     </div>
   </NScrollbar>
 </template>
+
+<style scoped>
+.gpt-flag {
+	/* eslint-disable-next-line no-tabs */
+	padding: 0 4px;
+	font-size: 10px;
+	line-height: 1.5;
+	border-radius: 2px;
+	font-weight: bold;
+  font-family: 'DINCond-Black';
+}
+</style>

@@ -25,8 +25,6 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   try {
     const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
     let firstChunk = true
-    console.log('prompt', prompt)
-    console.log('options', options)
     await chatReplyProcess({
       message: prompt,
       lastContext: options,
@@ -72,7 +70,6 @@ router.post('/model-list', async (req, res) => {
   try {
     const modelList = process.env.MODEL_LIST ?? []
     const modelListDisabled = process.env.MODEL_LIST_DISABLED ?? []
-    console.log('modelList', modelList, process.env.MODEL_LIST, process.env.MODEL_LIST_DISABLED)
     const whiteLIst = getModelList(modelList, modelListDisabled)
     res.send({
       status: 'Success',

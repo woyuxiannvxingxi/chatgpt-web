@@ -7,14 +7,20 @@ export function defaultState(): Chat.ChatState {
   return {
     active: uuid,
     usingContext: true,
-    history: [{ uuid, title: 'New Chat', isEdit: false }],
+    history: [{ uuid, title: 'New Chat', isEdit: false, modal: '' }],
     chat: [{ uuid, data: [] }],
   }
 }
 
 export function getLocalState(): Chat.ChatState {
   const localState = ss.get(LOCAL_NAME)
-  return { ...defaultState(), ...localState }
+  const newHistorys = localState.history.map((item: Chat.History) => {
+    const chat = localState.chat.find((i: any) => i.uuid === item.uuid)
+    const modalType = chat.data.at(-1).modal
+    item.modal = modalType
+    return item
+  })
+  return { ...defaultState(), ...localState, history: newHistorys }
 }
 
 export function setLocalState(state: Chat.ChatState) {

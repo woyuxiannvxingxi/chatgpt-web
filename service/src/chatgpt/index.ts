@@ -84,7 +84,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 async function chatReplyProcess(options: RequestOptions) {
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
-  console.log('%cmessage', 'color:#008d8e', lastContext)
   try {
     let options: SendMessageOptions = { timeoutMs }
 
@@ -100,7 +99,6 @@ async function chatReplyProcess(options: RequestOptions) {
       else
         options = { ...lastContext }
     }
-    console.log('%coptions:', 'color:red', options)
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -214,10 +212,9 @@ function currentModel(): ApiModel {
   return apiModel
 }
 
-function getModelList(MODEL_LIST, MODEL_LIST_DISABLED) {
-  const modelList = MODEL_LIST.split(',').map(model => ({ name: model, disabled: false }))
+function getModelList(MODEL_LIST: any, MODEL_LIST_DISABLED: any) {
+  const modelList = MODEL_LIST.split(',').map((model: any) => ({ name: model, disabled: false }))
   const disabledModels = MODEL_LIST_DISABLED.split(',')
-
   for (const model of modelList) {
     if (disabledModels.includes(model.name))
       model.disabled = true
