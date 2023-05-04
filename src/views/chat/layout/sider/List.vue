@@ -108,12 +108,11 @@ function isActive(uuid: number) {
 
 <style scoped>
 .gpt-flag {
-	/* eslint-disable-next-line no-tabs */
-	padding: 0 4px;
-	font-size: 10px;
-	line-height: 1.5;
-	border-radius: 2px;
-	font-weight: bold;
-  font-family: 'DINCond-Black';
+padding: 0 4px;
+font-size: 10px;
+line-height: 1.5;
+border-radius: 2px;
+font-weight: bold;
+font-family: 'DINCond-Black';
 }
 </style>
